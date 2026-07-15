@@ -1,0 +1,10 @@
+:host, .board { display: grid; gap: 1rem; }
+.page-heading, .heading, .actions { display: flex; justify-content: space-between; gap: .75rem; }
+.card, .dialog { background: var(--surface-card); border: 1px solid var(--surface-border); border-radius: 1rem; padding: 1.25rem; }
+.board { grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); }
+.actions { justify-content: flex-start; flex-wrap: wrap; }
+.dialog-backdrop { position: fixed; inset: 0; display: grid; place-items: center; padding: 1rem; background: rgb(15 23 42 / 60%); z-index: 1000; }
+.dialog { width: min(34rem, 100%); box-shadow: 0 1rem 3rem rgb(0 0 0 / 30%); }
+.dialog label, .dialog select { display: block; width: 100%; margin: .5rem 0; }
+.dialog select { padding: .65rem; }
+@media (max-width: 700px) { .page-heading, .heading { flex-direction: column; } }

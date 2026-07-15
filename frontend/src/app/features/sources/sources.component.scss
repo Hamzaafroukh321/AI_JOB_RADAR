@@ -1,0 +1,12 @@
+:host { display: grid; gap: 1.25rem; }
+.page-heading { h1 { margin: .15rem 0; } p { max-width: 70ch; color: var(--text-muted); } }
+.eyebrow, .type { color: var(--brand); font-size: .78rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.panel { background: var(--surface-card); border: 1px solid var(--surface-border); border-radius: 1rem; padding: 1.25rem; }
+.source-grid, .columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1rem; }
+.source-card { border: 1px solid var(--surface-border); border-radius: .8rem; padding: 1rem; h3 { margin: .25rem 0; } }
+dl div { display: flex; justify-content: space-between; gap: 1rem; padding: .35rem 0; } dt { color: var(--text-muted); } dd { margin: 0; text-align: right; }
+.actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
+form { display: grid; gap: .75rem; align-content: start; } label { display: grid; gap: .3rem; font-weight: 650; } input, select, textarea { width: 100%; border: 1px solid var(--surface-border); border-radius: .5rem; padding: .7rem; background: var(--surface-ground); color: inherit; } small { color: var(--text-muted); font-weight: 400; }
+.message { margin: 0; padding: .8rem 1rem; background: color-mix(in srgb, var(--brand) 12%, transparent); border-radius: .6rem; }
+.table-wrap { overflow-x: auto; } table { width: 100%; border-collapse: collapse; } th, td { padding: .6rem; border-bottom: 1px solid var(--surface-border); text-align: left; white-space: nowrap; }
+@media (max-width: 640px) { .columns { grid-template-columns: 1fr; } }

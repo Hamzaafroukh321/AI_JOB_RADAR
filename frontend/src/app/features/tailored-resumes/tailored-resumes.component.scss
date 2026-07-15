@@ -1,0 +1,13 @@
+:host, .cards { display: grid; gap: 1rem; }
+.page-heading, .heading, .actions { display: flex; justify-content: space-between; gap: 1rem; }
+.panel { background: var(--surface-card); border: 1px solid var(--surface-border); border-radius: 1rem; padding: 1.25rem; }
+form { display: grid; grid-template-columns: 8rem minmax(12rem, 1fr); gap: .75rem; align-items: center; }
+form button { grid-column: 2; justify-self: start; }
+input, select { padding: .65rem; border: 1px solid var(--surface-border); border-radius: .4rem; }
+.status { font-weight: 800; color: var(--primary-color); }
+.claim { display: grid; padding: .55rem 0; border-bottom: 1px solid var(--surface-border); }
+.claim small { color: var(--text-color-secondary); overflow-wrap: anywhere; }
+.missing { border-left: 4px solid var(--orange-500); padding: .5rem 1rem; }
+.actions { justify-content: flex-start; flex-wrap: wrap; margin-top: 1rem; }
+code { overflow-wrap: anywhere; }
+@media (max-width: 700px) { form { grid-template-columns: 1fr; } form button { grid-column: 1; } .page-heading, .heading { flex-direction: column; } }
