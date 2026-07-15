@@ -1,0 +1,123 @@
+<header class="page-heading">
+  <div><p class="eyebrow">Truth layer</p><h1>Profile & resume facts</h1><p>Only facts you explicitly verify can be used by future resume generation.</p></div>
+  @if (data.profile(); as profile) { <span class="version">Profile version {{ profile.profileVersion }}</span> }
+</header>
+
+@if (message()) { <div class="notice" role="status">{{ message() }}</div> }
+@if (data.loading()) { <p role="status">Loading your private profile…</p> }
+
+<section class="panel" aria-labelledby="resume-heading">
+  <div class="section-heading"><div><h2 id="resume-heading">Master resumes</h2><p>PDF or DOCX, up to the configured upload limit. Originals remain immutable.</p></div><button pButton type="button" severity="secondary" (click)="importSeed()">Import candidate seed</button></div>
+  <div class="upload-row">
+    <label for="resume-file">Choose a resume</label>
+    <input id="resume-file" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" (change)="chooseFile($event)">
+    <label for="resume-language">Resume language</label>
+    <select id="resume-language" [value]="uploadLanguage()" (change)="uploadLanguage.set($any($event.target).value)">
+      <option value="en">English</option>
+      <option value="fr">French</option>
+    </select>
+    <button pButton type="button" [disabled]="!selectedFile() || uploading()" (click)="upload()">{{ uploading() ? 'Parsing…' : 'Store and parse' }}</button>
+  </div>
+  <div class="cards">
+    @for (resume of data.resumes(); track resume.id) {
+      <article class="resume-card">
+        <div><strong>{{ resume.name }}</strong><span>{{ resume.originalFilename }} · {{ resume.sizeBytes }} bytes</span><span>{{ resume.extractionStatus }} · {{ resume.createdAt | date:'medium' }}</span><label>Language<select [value]="resume.languageCode" (change)="updateResumeLanguage(resume.id, $event)"><option value="en">English</option><option value="fr">French</option></select></label></div>
+        @if (resume.active) { <span class="badge verified">Active</span> }
+        @else { <button pButton type="button" severity="secondary" (click)="data.activate(resume.id)">Make active</button> }
+        @if (resume.extractionPreview) { <details><summary>Extraction preview</summary><pre>{{ resume.extractionPreview }}</pre></details> }
+      </article>
+    } @empty { <p>No resume uploaded yet.</p> }
+  </div>
+</section>
+
+<section class="panel" aria-labelledby="facts-heading">
+  <div class="section-heading"><div><h2 id="facts-heading">Fact review</h2><p>{{ pendingFacts().length }} awaiting review · {{ verifiedFacts().length }} verified</p></div></div>
+  <div class="facts">
+    @for (fact of pendingFacts(); track fact.id) {
+      <article class="fact-card">
+        <div class="fact-meta"><span class="badge">{{ fact.factType }}</span><span>{{ fact.verificationStatus }}</span><span>{{ factSource(fact) }}</span>@if (fact.sourcePage) { <span>Page {{ fact.sourcePage }}</span> }</div>
+        @if (editingFact()?.id === fact.id) {
+          <label [for]="'fact-' + fact.id">Correct this fact</label>
+          <textarea [id]="'fact-' + fact.id" rows="4" [value]="editStatement()" (input)="editStatement.set($any($event.target).value)"></textarea>
+          <div class="actions"><button pButton type="button" (click)="saveEdit()">Save as verified correction</button><button pButton type="button" severity="secondary" (click)="cancelEdit()">Cancel</button></div>
+        } @else {
+          <p>{{ fact.statement }}</p>
+          <div class="actions">
+            <button pButton type="button" (click)="data.transition(fact.id, 'verify')">Verify</button>
+            <button pButton type="button" severity="secondary" (click)="startEdit(fact)">Edit</button>
+            <button pButton type="button" severity="warn" (click)="data.transition(fact.id, 'clarify')">Needs clarification</button>
+            <button pButton type="button" severity="danger" (click)="data.transition(fact.id, 'reject')">Reject</button>
+          </div>
+        }
+      </article>
+    } @empty { <p>No facts currently need review.</p> }
+  </div>
+  <h3>Verified facts currently used by matching and resume generation</h3>
+  <div class="facts verified-facts">
+    @for (fact of verifiedFacts(); track fact.id) {
+      <article class="fact-card">
+        <div class="fact-meta"><span class="badge verified">{{ fact.factType }}</span><span>{{ factSource(fact) }}</span>@if (fact.sourcePage) { <span>Page {{ fact.sourcePage }}</span> }</div>
+        @if (editingFact()?.id === fact.id) {
+          <label [for]="'verified-fact-' + fact.id">Correct this fact</label>
+          <textarea [id]="'verified-fact-' + fact.id" rows="4" [value]="editStatement()" (input)="editStatement.set($any($event.target).value)"></textarea>
+          <div class="actions"><button pButton type="button" (click)="saveEdit()">Save verified correction</button><button pButton type="button" severity="secondary" (click)="cancelEdit()">Cancel</button></div>
+        } @else {
+          <p>{{ fact.statement }}</p>
+          <div class="actions"><button pButton type="button" severity="secondary" (click)="startEdit(fact)">Edit</button><button pButton type="button" severity="danger" (click)="data.transition(fact.id, 'reject')">Reject</button></div>
+        }
+      </article>
+    } @empty { <p>No verified facts yet. Verify accurate proposals above before running job matching.</p> }
+  </div>
+</section>
+
+<section class="panel" aria-labelledby="profile-heading">
+  <h2 id="profile-heading">Profile</h2>
+  <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="form-grid">
+    <label>Headline<input type="text" formControlName="headline"></label>
+    <label>Home country code<input type="text" maxlength="2" formControlName="homeCountryCode"></label>
+    <label>Home region<input type="text" formControlName="homeRegion"></label>
+    <label>Current city<input type="text" formControlName="currentCity"></label>
+    <label>Relocation preference<select formControlName="relocationPreference"><option>UNKNOWN</option><option>NO</option><option>DOMESTIC</option><option>INTERNATIONAL</option><option>REMOTE_ONLY</option></select></label>
+    <label>Sponsorship requirement<select formControlName="sponsorshipRequired"><option [ngValue]="null">Unknown</option><option [ngValue]="true">Required</option><option [ngValue]="false">Not required</option></select></label>
+    <button pButton type="submit">Save profile</button>
+  </form>
+</section>
+
+<section class="panel" aria-labelledby="preferences-heading">
+  <h2 id="preferences-heading">Job preferences</h2>
+  <form [formGroup]="preferenceForm" (ngSubmit)="savePreferences()" class="form-grid">
+    <label>Target role families<input type="text" formControlName="targetRoleFamilies" placeholder="AI trainer, Java AI engineer"></label>
+    <label>Preferred regions<input type="text" formControlName="preferredRegions" placeholder="MOROCCO, EUROPE"></label>
+    <label>Preferred country codes<input type="text" formControlName="preferredCountries" placeholder="MA, FR"></label>
+    <label>Contract work<select formControlName="contractAllowed"><option [ngValue]="null">Unknown</option><option [ngValue]="true">Allowed</option><option [ngValue]="false">Not allowed</option></select></label>
+    <label>Freelance work<select formControlName="freelanceAllowed"><option [ngValue]="null">Unknown</option><option [ngValue]="true">Allowed</option><option [ngValue]="false">Not allowed</option></select></label>
+    <label>Annotation work<select formControlName="annotationWorkAllowed"><option [ngValue]="null">Unknown</option><option [ngValue]="true">Interested</option><option [ngValue]="false">Not interested</option></select></label>
+    <label>Temporary work<select formControlName="temporaryWorkAllowed"><option [ngValue]="null">Unknown</option><option [ngValue]="true">Interested</option><option [ngValue]="false">Not interested</option></select></label>
+    <label>Minimum match score<input type="number" min="0" max="100" formControlName="minimumMatchScore"></label>
+    <label>Freshness days<input type="number" min="1" max="365" formControlName="freshnessDays"></label>
+    <button pButton type="submit" [disabled]="preferenceForm.invalid">Save preferences</button>
+  </form>
+</section>
+
+<div class="two-column">
+  <section class="panel" aria-labelledby="languages-heading">
+    <h2 id="languages-heading">Languages</h2><p>Never inferred—add only what you confirm.</p>
+    <form [formGroup]="languageForm" (ngSubmit)="addLanguage()" class="stack">
+      <label>Language code<input type="text" formControlName="languageCode" placeholder="en"></label>
+      <label>Spoken level<select formControlName="spokenLevel"><option>UNKNOWN</option><option>BASIC</option><option>CONVERSATIONAL</option><option>PROFESSIONAL</option><option>FLUENT</option><option>NATIVE</option></select></label>
+      <label>Written level<select formControlName="writtenLevel"><option>UNKNOWN</option><option>BASIC</option><option>CONVERSATIONAL</option><option>PROFESSIONAL</option><option>FLUENT</option><option>NATIVE</option></select></label>
+      <button pButton type="submit" [disabled]="languageForm.invalid">Add language</button>
+    </form>
+    <ul>@for (language of data.languages(); track language.id) { <li><span>{{ language.languageCode }}: {{ language.spokenLevel }} spoken / {{ language.writtenLevel }} written</span><button type="button" (click)="data.deleteLanguage(language.id)" aria-label="Delete language">Delete</button></li> }</ul>
+  </section>
+  <section class="panel" aria-labelledby="authorization-heading">
+    <h2 id="authorization-heading">Work authorization</h2><p>Country eligibility remains unknown until you confirm it.</p>
+    <form [formGroup]="authorizationForm" (ngSubmit)="addAuthorization()" class="stack">
+      <label>Country code<input type="text" maxlength="2" formControlName="countryCode" placeholder="MA"></label>
+      <label>Status<select formControlName="authorizationStatus"><option>UNKNOWN</option><option>AUTHORIZED</option><option>NOT_AUTHORIZED</option><option>CITIZEN</option><option>PERMANENT_RESIDENT</option></select></label>
+      <label>Notes<input type="text" formControlName="notes"></label>
+      <button pButton type="submit" [disabled]="authorizationForm.invalid">Add authorization</button>
+    </form>
+    <ul>@for (authorization of data.authorizations(); track authorization.id) { <li><span>{{ authorization.countryCode }}: {{ authorization.authorizationStatus }}</span><button type="button" (click)="data.deleteAuthorization(authorization.id)" aria-label="Delete authorization">Delete</button></li> }</ul>
+  </section>
+</div>

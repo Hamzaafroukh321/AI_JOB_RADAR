@@ -1,0 +1,4 @@
+.page-header { margin-bottom: 2rem; }.page-header h1 { margin: .25rem 0; font-size: clamp(2rem, 4vw, 3.4rem); }.page-header p { color: #64748b; }.eyebrow { color: #4f46e5 !important; font-size: .75rem; font-weight: 750; letter-spacing: .14em; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }.grid article { display: grid; gap: .5rem; background: white; border: 1px solid #e5e7eb; border-radius: .8rem; padding: 1.4rem; }.grid span, .grid small { color: #64748b; }.grid strong { font-size: 1.25rem; overflow-wrap: anywhere; }.notice, .state { margin-top: 1rem; padding: 1.5rem; border-radius: .8rem; background: #eef2ff; border: 1px solid #c7d2fe; }.notice h2 { margin-top: 0; }
+@media (max-width: 850px) { .grid { grid-template-columns: 1fr; } }
+

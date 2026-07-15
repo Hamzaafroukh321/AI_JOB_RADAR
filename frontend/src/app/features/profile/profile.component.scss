@@ -1,0 +1,14 @@
+:host { display: block; max-width: 86rem; margin: 0 auto; }
+.page-heading, .section-heading { display: flex; justify-content: space-between; gap: 1rem; align-items: start; }
+.page-heading { margin-bottom: 1.25rem; }.page-heading h1 { margin: .15rem 0; }.page-heading p, .panel p { color: #64748b; }
+.eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; font-weight: 700; color: #4f46e5 !important; }
+.version, .badge { border-radius: 999px; padding: .35rem .65rem; background: #eef2ff; color: #3730a3; font-size: .8rem; white-space: nowrap; }.verified { background: #dcfce7; color: #166534; }
+.notice { background: #ecfeff; border: 1px solid #a5f3fc; padding: .8rem 1rem; border-radius: .6rem; margin-bottom: 1rem; }
+.panel { background: white; border: 1px solid #e2e8f0; border-radius: .85rem; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 2px rgb(15 23 42 / 4%); }.panel h2 { margin-top: 0; }
+.upload-row, .actions { display: flex; gap: .65rem; align-items: center; flex-wrap: wrap; }.upload-row { padding: 1rem 0; }
+.cards, .facts, .stack { display: grid; gap: .75rem; }.resume-card, .fact-card { border: 1px solid #e2e8f0; border-radius: .65rem; padding: 1rem; }.resume-card { display: grid; grid-template-columns: 1fr auto; gap: .75rem; }.resume-card div { display: grid; gap: .2rem; }.resume-card span { color: #64748b; font-size: .85rem; }.resume-card details { grid-column: 1 / -1; }
+pre { white-space: pre-wrap; max-height: 18rem; overflow: auto; background: #f8fafc; padding: .75rem; border-radius: .5rem; }.fact-meta { display: flex; gap: .6rem; align-items: center; color: #64748b; font-size: .8rem; }.fact-card textarea { width: 100%; margin: .5rem 0; }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: .85rem; align-items: end; }.form-grid label, .stack label { display: grid; gap: .35rem; font-weight: 600; font-size: .88rem; }
+input, select, textarea { border: 1px solid #cbd5e1; border-radius: .5rem; padding: .65rem; background: white; color: inherit; }
+.two-column { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }.two-column .panel { margin: 0; }.panel ul { list-style: none; padding: 0; }.panel li { display: flex; justify-content: space-between; gap: .75rem; border-top: 1px solid #e2e8f0; padding: .65rem 0; }.panel li button { border: 0; color: #b91c1c; background: none; }
+@media (max-width: 760px) { .two-column { grid-template-columns: 1fr; }.page-heading, .section-heading { flex-direction: column; }.resume-card { grid-template-columns: 1fr; } }
