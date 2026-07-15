@@ -1,0 +1,21 @@
+.env
+.env.*
+!.env.example
+!.env.production.example
+.idea/
+.vscode/
+*.iml
+*.log
+backend/target/
+frontend/node_modules/
+frontend/dist/
+coverage/
+playwright-report/
+.playwright-cli/
+test-results/
+.DS_Store
+Thumbs.db
+
+# Personal candidate documents stay local; upload them through the application.
+HamzaAfroukhCV.pdf
+HamzaAfroukhResume.pdf
