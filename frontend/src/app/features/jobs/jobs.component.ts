@@ -37,8 +37,8 @@ import { JobService } from './job.service';
 
       <div class="filter-grid">
         <label><span>Role focus</span><select formControlName="focus" (change)="search()"><option value="PERSONAL_AI_SOFTWARE">My AI & software profile</option><option value="AI_ALL">All AI-related roles</option></select></label>
-        <label><span>Experience</span><select formControlName="experienceLevel" (change)="search()"><option value="JUNIOR_ENTRY">Junior & entry level</option><option value="EXCLUDE_SENIOR">Any non-senior role</option><option value="JUNIOR">Explicitly junior only</option><option value="INTERN">Internships</option><option value="ALL">All levels</option></select></label>
-        <label><span>Region</span><select formControlName="section" (change)="search()"><option value="ALL_AI">All regions</option><option value="EUROPE">Europe</option><option value="MIDDLE_EAST">Middle East</option><option value="WORLDWIDE_REMOTE">Worldwide from Morocco</option><option value="MOROCCO">Morocco</option><option value="AI_TRAINING_DATA">AI training & evaluation</option></select></label>
+        <label><span>Experience</span><select formControlName="experienceLevel" (change)="search()"><option value="EXCLUDE_SENIOR">Junior-friendly · no senior roles</option><option value="JUNIOR_ENTRY">Explicit junior / entry signals</option><option value="JUNIOR">Classified junior only</option><option value="INTERN">Internships</option><option value="ALL">All levels</option></select></label>
+        <label><span>Region</span><select formControlName="section" (change)="search()"><option value="">All regions</option><option value="EUROPE">Europe</option><option value="MIDDLE_EAST">Middle East</option><option value="WORLDWIDE_REMOTE">Worldwide from Morocco</option><option value="MOROCCO">Morocco</option><option value="AI_TRAINING_DATA">AI training & evaluation</option></select></label>
         <label><span>Workplace</span><select formControlName="workplaceMode" (change)="search()"><option value="">Any</option><option value="REMOTE">Remote</option><option value="HYBRID">Hybrid</option><option value="ONSITE">On-site</option></select></label>
         <label><span>Sort</span><select formControlName="sort" (change)="search()"><option value="NEWEST">Newest posted</option><option value="DISCOVERED">Recently discovered</option><option value="COMPANY">Company</option><option value="SALARY">Highest salary</option></select></label>
       </div>
@@ -74,11 +74,11 @@ import { JobService } from './job.service';
 export class JobsComponent implements OnInit {
   readonly data = inject(JobService);
   private readonly forms = inject(FormBuilder);
-  readonly filters = this.forms.nonNullable.group({ q: [''], focus: ['PERSONAL_AI_SOFTWARE'], experienceLevel: ['JUNIOR_ENTRY'], section: ['ALL_AI'], workplaceMode: [''], sort: ['NEWEST'] });
+  readonly filters = this.forms.nonNullable.group({ q: [''], focus: ['PERSONAL_AI_SOFTWARE'], experienceLevel: ['EXCLUDE_SENIOR'], section: [''], workplaceMode: [''], sort: ['NEWEST'] });
 
   ngOnInit(): Promise<void> { return this.search(); }
   search(page = 0): Promise<void> { return this.data.search({ ...this.filters.getRawValue(), page, size: 25 }); }
-  reset(): Promise<void> { this.filters.reset({ q: '', focus: 'PERSONAL_AI_SOFTWARE', experienceLevel: 'JUNIOR_ENTRY', section: 'ALL_AI', workplaceMode: '', sort: 'NEWEST' }); return this.search(); }
+  reset(): Promise<void> { this.filters.reset({ q: '', focus: 'PERSONAL_AI_SOFTWARE', experienceLevel: 'EXCLUDE_SENIOR', section: '', workplaceMode: '', sort: 'NEWEST' }); return this.search(); }
   goToPage(page: number): Promise<void> { return this.search(Math.max(0, page)); }
   async save(job: JobCard): Promise<void> { await this.data.action(job.id, job.saved ? 'unsave' : 'save'); await this.search(this.data.page()?.page ?? 0); }
   async hide(job: JobCard): Promise<void> { await this.data.action(job.id, 'hide'); await this.search(this.data.page()?.page ?? 0); }

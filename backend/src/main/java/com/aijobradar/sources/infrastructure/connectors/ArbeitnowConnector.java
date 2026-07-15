@@ -44,7 +44,7 @@ public class ArbeitnowConnector implements JobSourceConnector {
   @Override
   public FetchResult fetch(FetchContext context, SourceConfiguration source) {
     String base = source.baseUrl() == null ? "https://www.arbeitnow.com" : source.baseUrl();
-    int configuredPages = pages(source.configuration().getOrDefault("pages", "5"));
+    int configuredPages = pages(source.configuration().getOrDefault("pages", "20"));
     int pageCount = Math.min(configuredPages, Math.max(1, context.pageLimit()));
     List<RawJobRecord> records = new ArrayList<>();
     for (int page = 1; page <= pageCount; page++) {
@@ -105,9 +105,9 @@ public class ArbeitnowConnector implements JobSourceConnector {
     return values.isArray() && !values.isEmpty() ? values.get(0).asText() : null;
   }
 
-  private int pages(String value) {
+  int pages(String value) {
     try {
-      return Math.max(1, Math.min(5, Integer.parseInt(value)));
+      return Math.max(1, Math.min(20, Integer.parseInt(value)));
     } catch (NumberFormatException exception) {
       throw new UnsafeSourceException("CONFIGURATION", "Arbeitnow page count is invalid");
     }

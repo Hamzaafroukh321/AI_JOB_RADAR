@@ -1,0 +1,13 @@
+[
+  {"legal":"metadata"},
+  {
+    "id":"987",
+    "epoch":1784000000,
+    "position":"Junior Machine Learning Engineer",
+    "company":"Example AI",
+    "location":"Worldwide",
+    "description":"Build Python machine learning services.",
+    "url":"https://remoteok.com/remote-jobs/987",
+    "apply_url":"https://example.test/apply/987"
+  }
+]

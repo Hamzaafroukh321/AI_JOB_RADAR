@@ -45,7 +45,7 @@ public class LeverConnector implements JobSourceConnector {
     String site = source.configuration().get("site");
     if (site == null || !site.matches("[A-Za-z0-9_-]+"))
       throw new UnsafeSourceException("CONFIGURATION", "Lever site is required");
-    int limit = Math.min(Math.max(context.pageLimit(), 1) * 100, 500);
+    int limit = limit(source.configuration().get("limit"), context.pageLimit());
     int skip = cursor(context.cursor());
     String host =
         "EU".equalsIgnoreCase(source.configuration().get("region"))
@@ -101,6 +101,16 @@ public class LeverConnector implements JobSourceConnector {
       return Math.max(0, Integer.parseInt(value));
     } catch (NumberFormatException exception) {
       throw new UnsafeSourceException("CURSOR", "Lever cursor is invalid");
+    }
+  }
+
+  int limit(String configured, int pageLimit) {
+    int maximum = Math.min(Math.max(pageLimit, 1) * 100, 500);
+    if (configured == null || configured.isBlank()) return maximum;
+    try {
+      return Math.min(Math.max(1, Integer.parseInt(configured)), maximum);
+    } catch (NumberFormatException exception) {
+      throw new UnsafeSourceException("CONFIGURATION", "Lever result limit is invalid");
     }
   }
 }

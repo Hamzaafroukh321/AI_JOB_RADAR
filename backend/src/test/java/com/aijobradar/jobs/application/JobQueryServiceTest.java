@@ -13,13 +13,13 @@ class JobQueryServiceTest {
         service.where(search("ALL_AI", "PERSONAL_AI_SOFTWARE", "JUNIOR_ENTRY", "REMOTE"));
 
     assertThat(where)
-        .contains("j.ai_relevance IN ('HIGH','MEDIUM')")
         .contains("lower(j.original_title) ~ :targetTitlePattern")
         .contains("lower(j.original_title) !~ :unrelatedTitlePattern")
         .contains("j.seniority NOT IN ('SENIOR','STAFF','LEAD','MANAGER')")
         .contains("lower(j.original_title) !~ :seniorTitlePattern")
         .contains("j.workplace_mode=:workplace")
         .contains("r.region_code=:section");
+    assertThat(where).doesNotContain("j.ai_relevance IN ('HIGH','MEDIUM')");
   }
 
   @Test

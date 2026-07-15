@@ -40,6 +40,8 @@ class ConnectorFixtureTest {
     assertThat(connector.parse(fixture("lever-empty.json"))).isEmpty();
     assertThatThrownBy(() -> connector.parse(fixture("lever-schema-invalid.json")))
         .isInstanceOf(UnsafeSourceException.class);
+    assertThat(connector.limit("400", 20)).isEqualTo(400);
+    assertThat(connector.limit("999", 20)).isEqualTo(500);
   }
 
   @Test
@@ -123,6 +125,27 @@ class ConnectorFixtureTest {
             });
     assertThat(connector.parse(fixture("arbeitnow-empty.json"))).isEmpty();
     assertThatThrownBy(() -> connector.parse(fixture("arbeitnow-schema-invalid.json")))
+        .isInstanceOf(UnsafeSourceException.class)
+        .hasMessageContaining("array");
+    assertThat(connector.pages("20")).isEqualTo(20);
+    assertThat(connector.pages("999")).isEqualTo(20);
+  }
+
+  @Test
+  void remoteOkSkipsMetadataAndParsesAttributedRemoteJobs() {
+    RemoteOkConnector connector = new RemoteOkConnector(null, json);
+    assertThat(connector.parse(fixture("remoteok-normal.json")))
+        .singleElement()
+        .satisfies(
+            job -> {
+              assertThat(job.externalId()).isEqualTo("987");
+              assertThat(job.rawTitle()).isEqualTo("Junior Machine Learning Engineer");
+              assertThat(job.rawCompany()).isEqualTo("Example AI");
+              assertThat(job.workplaceMode()).isEqualTo("REMOTE");
+              assertThat(job.sourcePostedAt()).isNotNull();
+            });
+    assertThat(connector.parse("[]")).isEmpty();
+    assertThatThrownBy(() -> connector.parse("{\"jobs\":[]}"))
         .isInstanceOf(UnsafeSourceException.class)
         .hasMessageContaining("array");
   }

@@ -25,7 +25,7 @@ import tools.jackson.databind.ObjectMapper;
 @Service
 public class SourceRegistryService {
   private static final Set<String> TYPES =
-      Set.of("GREENHOUSE", "LEVER", "ADZUNA", "JOBICY", "REMOTIVE", "ARBEITNOW");
+      Set.of("GREENHOUSE", "LEVER", "ADZUNA", "JOBICY", "REMOTIVE", "ARBEITNOW", "REMOTEOK");
   private static final Set<String> TERMS = Set.of("APPROVED", "REVIEW_REQUIRED", "DISABLED");
   private static final TypeReference<Map<String, String>> STRING_MAP = new TypeReference<>() {};
   private final JdbcClient jdbc;

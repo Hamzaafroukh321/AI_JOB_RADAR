@@ -29,8 +29,8 @@ describe('JobsComponent', () => {
     expect(text).toContain('Senior and unrelated business roles are excluded by default');
     expect(service.search).toHaveBeenCalledWith(expect.objectContaining({
       focus: 'PERSONAL_AI_SOFTWARE',
-      experienceLevel: 'JUNIOR_ENTRY',
-      section: 'ALL_AI',
+      experienceLevel: 'EXCLUDE_SENIOR',
+      section: '',
     }));
   });
 });

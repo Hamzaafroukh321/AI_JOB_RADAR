@@ -33,6 +33,7 @@ import tools.jackson.databind.ObjectMapper;
 @Service
 public class IngestionService {
   private static final UUID MANUAL_SOURCE = UUID.fromString("00000000-0000-0000-0000-000000000201");
+  private static final int MAX_PAGES_PER_FETCH = 20;
   private final JdbcClient jdbc;
   private final SourceRegistryService registry;
   private final JobContentNormalizer normalizer;
@@ -88,7 +89,7 @@ public class IngestionService {
                   runId,
                   source.lastSuccessfulAt() == null ? null : source.lastSuccessfulAt().toInstant(),
                   null,
-                  5),
+                  MAX_PAGES_PER_FETCH),
               registry.configuration(sourceId));
       Counters counters =
           transactions.execute(status -> persist(runId, source, null, result.records()));

@@ -24,5 +24,6 @@ A-017. The five initial resume variants are AI Engineer, GenAI/RAG, Java/Angular
 Training/Evaluation, and Remote Contract. English two-page ATS output is the safe default.
 
 A-018. This installation is optimized for one junior software/AI engineer. The default job search
-requires title-level AI/software relevance and junior/entry evidence, and excludes senior leadership
-and unrelated commercial roles. Broader results require an explicit filter change.
+requires title-level AI/software relevance and excludes explicit senior leadership and unrelated
+commercial roles. Stricter classified-junior and explicit junior/entry-signal filters remain
+available when precision is more important than recall.

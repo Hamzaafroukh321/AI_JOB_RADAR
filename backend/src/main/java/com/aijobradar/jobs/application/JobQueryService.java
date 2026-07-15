@@ -24,11 +24,11 @@ import tools.jackson.databind.ObjectMapper;
 @Service
 public class JobQueryService {
   private static final String SENIOR_TITLE_PATTERN =
-      "(^|[^a-z])(senior|sr\\.?|staff|lead|principal|manager|director|head|architect|vp|vice president|chief)([^a-z]|$)";
+      "(^|[^a-z])(senior|sr\\.?|staff|lead|principal|manager|director|head|architect|founding|vp|vice president|chief)([^a-z]|$)";
   private static final String TARGET_TITLE_PATTERN =
-      "(^|[^a-z])(ai|artificial intelligence|machine learning|ml|llm|generative|genai|prompt|rag|software engineer|software developer|backend|full[ -]?stack|java|spring|angular|python|data annotat|coding evaluator|ai trainer)([^a-z]|$)";
+      "(^|[^a-z])(ai|artificial intelligence|machine learning|ml|llm|generative|genai|prompt|rag|software engineer|software developer|backend|front[ -]?end|full[ -]?stack|web developer|mobile developer|devops|platform engineer|data engineer|data scientist|computer vision|nlp|robotics|qa engineer|test automation|cloud engineer|site reliability|sre|java|spring|angular|python|data annotat|coding evaluator|ai trainer)([^a-z]|$)";
   private static final String UNRELATED_TITLE_PATTERN =
-      "(^|[^a-z])(customer service|customer success|sales|marketing|account manager|finance|legal|counsel|insurance|human resources|recruiter|onboarding|auditor)([^a-z]|$)";
+      "(^|[^a-z])(customer service|customer success|sales|marketing|marketer|advertising|account manager|project manager|projektleiter|finance|legal|counsel|insurance|human resources|recruiter|onboarding|auditor)([^a-z]|$)";
   private final JdbcClient jdbc;
   private final ObjectMapper json;
   private final Clock clock;
@@ -190,7 +190,6 @@ public class JobQueryService {
     if (present(query.workplaceMode())) clauses.add("j.workplace_mode=:workplace");
     if (present(query.remoteScope())) clauses.add("j.remote_scope=:remote");
     if ("PERSONAL_AI_SOFTWARE".equalsIgnoreCase(query.focus())) {
-      clauses.add("j.ai_relevance IN ('HIGH','MEDIUM')");
       clauses.add("lower(j.original_title) ~ :targetTitlePattern");
       clauses.add("lower(j.original_title) !~ :unrelatedTitlePattern");
     }

@@ -2,7 +2,7 @@ export interface JobSource {
   readonly id: string;
   readonly key: string;
   readonly displayName: string;
-  readonly type: 'GREENHOUSE' | 'LEVER' | 'ADZUNA' | 'JOBICY' | 'REMOTIVE' | 'ARBEITNOW' | 'MANUAL';
+  readonly type: 'GREENHOUSE' | 'LEVER' | 'ADZUNA' | 'JOBICY' | 'REMOTIVE' | 'ARBEITNOW' | 'REMOTEOK' | 'MANUAL';
   readonly termsReviewStatus: 'APPROVED' | 'REVIEW_REQUIRED' | 'DISABLED';
   readonly enabled: boolean;
   readonly parserVersion: string;
